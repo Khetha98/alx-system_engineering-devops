@@ -2,7 +2,7 @@
 # This script is displaying Best School 10 times
 
 C=0
-while (($C<10))  
+while (($C < 10))  
 do
     echo "Best School"
     let C=C+1
