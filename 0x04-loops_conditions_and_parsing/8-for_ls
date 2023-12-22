@@ -1,15 +1,7 @@
 #!/usr/bin/env bash
 # displays the content of the current director
 
-c="0"
-while [ $c -le 12 ]
+for fl in *
 do
-echo "Hour: $c"
-k="1"
-while [ $k -le 59 ]
-do
-echo "$k"
-k=$((k+1))
-done
-c=$((c+1))
+	echo "$fl" | cut -d "-" -f2-
 done
