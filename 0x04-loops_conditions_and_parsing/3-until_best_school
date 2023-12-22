@@ -5,5 +5,5 @@ C=10
 until (($C < 1))  
 do
     echo "Best School"
-    let C-=C
+    let C-=1
 done
