@@ -5,5 +5,5 @@ C=0
 while (($C < 10))  
 do
     echo "Best School"
-    let C=C+1
+    (( C++ ))
 done
