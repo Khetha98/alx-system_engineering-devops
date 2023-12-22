@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 # This script is displaying Best School 10 times
 
-C=10
-until (($C < 1))  
+c="0"
+until [ $c -eq 10 ]
 do
-    echo "Best School"
-    let C-=1
+echo "Best School"
+c=$((c+1))
 done
