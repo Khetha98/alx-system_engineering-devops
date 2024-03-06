@@ -1,84 +1,39 @@
 #!/usr/bin/env bash
-# duplicate web-01 to web-02
-# these scripts are an upgrade from the web-server scripts...
+# configure web-02 to be identical to web-01
+# The name of the custom HTTP header must be X-Served-By
+# The value of the custom HTTP header must be the hostname of the server Nginx is running on
 
-# uncomment to see the script run in action
-#set -x
+sudo apt-get -y update
 
-echo -e "Updating and doing some minor checks...\n"
+sudo apt-get -y install nginx
 
-function install() {
-	command -v "$1" &> /dev/null
-
-	#shellcheck disable=SC2181
-	if [ $? -ne 0 ]; then
-		echo -e "	Installing: $1$\n"
-		sudo apt-get update -y -qq && \
-			sudo apt-get install -y "$1" -qq
-		echo -e "\n"
-	else
-		echo -e "	${1} is already installed.\n"
-	fi
-}
-
-install nginx #install nginx
-
-echo -e "\nSetting up some minor stuff.\n"
-
-# allowing nginx on firewall
+# is used to allow incoming connections to the Nginx HTTP server through the firewall through port 80. using the ufw (Uncomplicated Firewall) command-line tool.
 sudo ufw allow 'Nginx HTTP'
 
-# Give the user ownership to website files for easy editing
-if [ -d "/var/www" ]; then
-	sudo chown -R "$USER":"$USER" /var/www
-	sudo chmod -R 755 /var/www
-else
-	sudo mkdir -p /var/www
-	sudo chown -R "$USER":"$USER" /var/www
-	sudo chmod -R 755 /var/www
-fi
+# change the owner of the /var/www directory to the current user recursively. To allow modification of the files in the directory.
+sudo chown -R $USER /var/www
 
-# create directories if not present
-for dir in /var/www/{html,error}; do
-	if ! [ -d "$dir" ]; then
-		mkdir -p "$dir"
-	fi
-done
+# change the owner of the /etc/nginx/sites-available/defaul/etc/nginx/sites-available/default,to enable modification of the config file.
+sudo chown -R $USER /etc/nginx/sites-available/default
 
-# creating new index
-echo "Hello World!" > /var/www/html/index.html
+# Making a backup of the default file, in case something goes wrong
+sudo cp /etc/nginx/sites-available/default /etc/nginx/sites-available/default.bak
 
-# create new error page
-echo "Ceci n'est pas une page" > /var/www/html/error_404.html
+# set up a page containing "Hello World" when queried at the root with a curl GET request.
+echo 'Hello World!' > /var/www/html/index.nginx-debian.html
 
-# backup default server config file
-sudo cp /etc/nginx/sites-enabled/default nginx-sites-enabled_default.backup
+# set up a content for error 404 html page.
+echo "Ceci n'est pas une page" >> /var/www/html/error_404.html
 
-server_config=\
-"server {
-		listen 80 default_server;
-		listen [::]:80 default_server;
-		root /var/www/html;
-		index index.html index.htm index.nginx-debian.html
-		server_name_;
-		add_header X-Served-By \$hostname;
-		location / {
-			try_files \$uri \$uri/ =404;
-		}
-		if (\$request_filename ~ redirect_me){
-			rewrite ^ https://th3-gr00t.tk/ permanent;
-		}
-		error_page 404 /error_404.html;
-		location = /error_404.html {
-			internal;
-		}
-}"
+sudo service nginx start
 
-#shellcheck disable=SC2154
-echo "$server_config" | sudo dd status=none of=/etc/nginx/sites-enabled/default
+# Setting up /redirect_me to a permanent redirect to https://twitter.com/ai_optimizer
+sudo sed -i '24i\rewrite ^/redirect_me https://twitter.com/ai_optimizer permanent;' /etc/nginx/sites-available/default
 
-if [ "$(pgrep -c nginx)" -le 0 ]; then
-	sudo service nginx start
-else
-	sudo service nginx restart
-fi
+# Set up error 404 page location
+sudo sed -i '25i\	error_page 404 /error_404.html;' /etc/nginx/sites-available/default
+
+# Setting up custom HTTP header called 'X-Served-By' to all responses, containing the hostname of the server that served the request.
+sudo sed -i '49i\\tadd_header X-Served-By \$hostname;' /etc/nginx/sites-available/default
+
+sudo service nginx restart
