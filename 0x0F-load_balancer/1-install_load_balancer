@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Install the load balancer
+# Install a load balancer
 
 
 sudo apt-get -y update
