@@ -1,6 +1,4 @@
-#!/usr/bin/env bash
-# It configure the firewall to block 
-#incoming traffic while allowing other ports
+# It checks the status of ufw
 
 sudo apt-get -y update
 sudo apt-get -y install ufw
