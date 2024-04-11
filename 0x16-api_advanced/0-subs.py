@@ -1,34 +1,16 @@
 #!/usr/bin/python3
-"""
-number of subscribers for a given subreddit
-"""
-
-from requests import get
+"""Function to query subscribers on a given Reddit subreddit."""
+import requests
 
 
 def number_of_subscribers(subreddit):
-    """
-    function that queries the Reddit API and returns the number of subscribers
-    (not active users, total subscribers) for a given subreddit.
-    """
-
-    if subreddit is None or not isinstance(subreddit, str):
+    """Return the total number of subscribers on a given subreddit."""
+    url = "https://www.reddit.com/r/{}/about.json".format(subreddit)
+    headers = {
+        "User-Agent": "linux:0x16.api.advanced:v1.0.0 (by /u/bdov_)"
+    }
+    response = requests.get(url, headers=headers, allow_redirects=False)
+    if response.status_code == 404:
         return 0
-
-    user_agent = {'User-agent': 'Google Chrome Version 81.0.4044.129'}
-    url = 'https://www.reddit.com/r/{}/about.json'.format(subreddit)
-    response = get(url, headers=user_agent)
-
-    if response.status_code != 200:
-        return 0
-
-    try:
-        results = response.json()
-        if 'data' in results and 'subscribers' in results['data']:
-            return results['data']['subscribers']
-        else:
-            print("Error: Malformed JSON response")
-            return 0
-    except Exception as e:
-        print("Error:", e)
-        return 0
+    results = response.json().get("data")
+    return results.get("subscribers")
