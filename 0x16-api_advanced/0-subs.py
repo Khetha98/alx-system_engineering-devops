@@ -18,10 +18,17 @@ def number_of_subscribers(subreddit):
     user_agent = {'User-agent': 'Google Chrome Version 81.0.4044.129'}
     url = 'https://www.reddit.com/r/{}/about.json'.format(subreddit)
     response = get(url, headers=user_agent)
-    results = response.json()
+
+    if response.status_code != 200:
+        return 0
 
     try:
-        return results.get('data').get('subscribers')
-
-    except Exception:
+        results = response.json()
+        if 'data' in results and 'subscribers' in results['data']:
+            return results['data']['subscribers']
+        else:
+            print("Error: Malformed JSON response")
+            return 0
+    except Exception as e:
+        print("Error:", e)
         return 0
