@@ -1,4 +1,4 @@
-# This manuscript increases the amount of traffic an Nginx server can handle
+# manuscript increases amount of traffic an Nginx server can handle
 
 # Increase the ULIMIT of the default file
 file { 'fix-for-nginx':
@@ -7,7 +7,7 @@ file { 'fix-for-nginx':
   content => inline_template('<%= File.read("/etc/default/nginx").gsub(/15/, "4096") %>'),
 }
 
-# Restart Nginx
+# Restart Nginx server
 -> exec { 'nginx-restart':
   command => 'nginx restart',
   path    => '/etc/init.d/',
