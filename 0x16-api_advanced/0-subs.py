@@ -16,7 +16,7 @@ def number_of_subscribers(subreddit) -> int:
     # Returns the number of subscribers for a given subreddit
     base_url = f"https://www.reddit.com/r/{subreddit}/about.json"
     try:
-        request = requests.get(base_url, headers={'User-Agent': 'Agent Uche'})
+        request = requests.get(base_url, headers={'User-Agent': 'Agent Uche'}, allow_redirects=False)
         data = request.json()
         return data['data']['subscribers']
     except Exception:
