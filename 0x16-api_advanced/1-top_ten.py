@@ -12,11 +12,10 @@ def top_ten(subreddit):
     Function that queries the Reddit API.
     If not a valid subreddit, print None.
     """
-    req = requests.get(
-        f"https://www.reddit.com/r/{subreddit}/hot.json",
-        headers={"User-Agent": "Mozilla/5.0"},
-        params={"limit": 10},
-    )
+    url = f"https://www.reddit.com/r/{subreddit}/hot.json"
+    headers = {"User-Agent": "Mozilla/5.0"}
+    params={"limit": 10}
+    req = requests.get(url, headers=headers, params=params)
 
     if req.status_code == 200:
         for get_data in req.json().get("data").get("children"):
