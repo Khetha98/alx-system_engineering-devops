@@ -13,7 +13,7 @@ def top_ten(subreddit):
     If not a valid subreddit, print None.
     """
     req = requests.get(
-        "https://www.reddit.com/r/{}/hot.json".format(subreddit),
+        f"https://www.reddit.com/r/{subreddit}/hot.json",
         headers={"User-Agent": "Mozilla/5.0"},
         params={"limit": 10},
     )
