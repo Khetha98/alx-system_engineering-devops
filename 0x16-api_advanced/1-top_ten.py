@@ -13,10 +13,9 @@ def top_ten(subreddit):
     If not a valid subreddit, print None.
     """
     url = f"https://www.reddit.com/r/{subreddit}/hot.json"
-    headers = {"User-Agent": "Mozilla/5.0"}
     params = {"limit": 10}
 
-    req = requests.get(url, headers=headers, params=params)
+    req = requests.get(url, params=params)
 
     if req.status_code == 200:
         for get_data in req.json()["data"]["children"]:
