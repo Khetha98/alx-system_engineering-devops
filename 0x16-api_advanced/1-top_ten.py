@@ -18,7 +18,9 @@ def top_ten(subreddit):
     req = requests.get(url, params=params)
 
     if req.status_code == 200:
+
         for get_data in req.json()["data"]["children"]:
+
             dat = get_data["data"]
             title = dat["title"]
             print(title)
