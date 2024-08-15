@@ -8,7 +8,8 @@ import requests
 
 def number_of_subscribers(subreddit):
     """
-    Return the total number of subscribers on a given subreddit.
+    Return the total number of subscribers on a given subreddit
+    the active subscribers.
     """
     url = f"https://www.reddit.com/r/{subreddit}/about.json"
     headers = {"User-Agent": "Mozilla/5.0"}
