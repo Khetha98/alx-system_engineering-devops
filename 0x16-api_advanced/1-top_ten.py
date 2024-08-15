@@ -16,7 +16,7 @@ def top_ten(subreddit):
     params = {"limit": 10}
     
     try:
-        req = requests.get(url, headers=headers, params=params, allow_redirects=False)
+        req = requests.get(url, headers=headers, params=params)
         if req.status_code == 200:
             try:
                 data = req.json()
